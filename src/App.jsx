@@ -1,34 +1,46 @@
 import { useEffect, useState } from "react"
 import InfiniteScroll from "react-infinite-scroll-component";
 import Products from "./Products";
+import LoadingBar from "react-top-loading-bar";
 
 
 function App() {
   const [products, setProducts] = useState([]);
   const [page, setPage] = useState(0);
+  const [progress, setProgress] = useState(0);
   const perPage = 10;
   let totalResult = 39;
 
-  const fetchData = () => {
-      fetch(`https://api.escuelajs.co/api/v1/products?offset=${page}&limit=${perPage}`)
-      .then((res) => res.json())
-      .then((data) => setProducts(data))
-      .catch((err) => console.log(err.message));
+  const fetchData = async() => {
+    setProgress(10);
+    try {
+       const response =  await fetch(`https://api.escuelajs.co/api/v1/products?offset=${page}&limit=${perPage}`)
+       setProgress(40);
+       const data = await response.json();
+       setProgress(70);
+       setProducts(data);
+       setProgress(100);
 
+    } catch (error) {
+      console.log(error.message);
+    }
   }
 
   useEffect(() => {
     fetchData();
   }, [])
 
+
   const fetchMoreData = () => {
     setPage(page + perPage);
+    setProgress(50);
     setTimeout(() => {
       fetch(`https://api.escuelajs.co/api/v1/products?offset=${page + perPage}&limit=${perPage}`)
       .then((res) => res.json())
       .then((data) => setProducts(products.concat(data))
         )
       .catch((err) => console.log(err.message));
+      setProgress(100);
 
     }, 1200);
  
@@ -38,6 +50,12 @@ function App() {
   
   return (
     <>
+     <LoadingBar 
+      color="red"
+      progress={progress}
+      height={5}
+     />
+
      <main className="app">
       <InfiniteScroll
        dataLength={products.length}
