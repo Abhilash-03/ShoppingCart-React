@@ -2,9 +2,10 @@ import { useContext, useEffect } from "react";
 import CartItems from "./CartItems";
 import CartContext from "../context/CartContext";
 import { useNavigate } from "react-router-dom";
+import Message from "./Message";
 
 const Cart = () => {
-  const { cartItems, totalPrice, handleBuyNow, msg, setMsg } = useContext(CartContext);
+  const { cartItems, totalPrice, handleBuyNow, setMsg } = useContext(CartContext);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -12,18 +13,18 @@ const Cart = () => {
       setTimeout(() => {
         setMsg('');
         navigate('/')
-      }, 5200);
+      }, 3200);
     }
   }, [navigate, cartItems, setMsg])
 
   return (
     <>
-    <ul className="p-3 h-full w-full overflow-auto mb-6">
-        { !msg && cartItems.length > 0 ?
+    <ul className="p-3 mb-6">
+        {cartItems.length > 0 ?
             cartItems.map(item => (
                 <CartItems key={item.id} item={item} />
             )) 
-            : <h1 className="h-screen font-serif font-bold w-full flex justify-center items-center text-3xl  text-white">{msg || 'Cart is Empty!'}</h1>
+            : <Message />
         }
     </ul>
    
