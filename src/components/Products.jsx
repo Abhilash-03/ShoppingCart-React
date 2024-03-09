@@ -6,9 +6,13 @@ const Products = ({ items }) => {
     const { title, images } = items;
     const [image, setImage] = useState(images[0]);
     const [show, setShow] = useState(false);
-    const { handleCartItems, isExistedCartItem } = useContext(CartContext);
+    const { dispatch, isExistedCartItem } = useContext(CartContext);
 
-    const isAdded = isExistedCartItem(items);
+    const isAdded = isExistedCartItem(items);  
+    
+    const addToCart = (item) => {
+      dispatch({type: 'ADD_PRODUCT', payload : {...item, quantity: 1}})
+    }
 
   return (
     <div className="product md:w-3/5 lg:w-2/5 w-full text-xl bg-slate-600 font-serif p-2 md:m-2 mt-4 rounded-xl overflow-hidden transition-all delay-500">
@@ -25,12 +29,12 @@ const Products = ({ items }) => {
       
          <div className="flex justify-center space-x-3 items-center mt-3 relative">
          <button onClick={() => setShow(!show)} className="h-14 w-14 rounded-full text-2xl bg-slate-200 text-black p-2 font-bold hover:bg-slate-300 disabled:bg-gray-300 disabled:text-black"><i className="fa-solid fa-eye"></i></button>
-         <button onClick={() => handleCartItems(items)} className="h-14 w-14 rounded-full text-2xl bg-yellow-500 text-black py-3 font-bold hover:bg-yellow-300 disabled:bg-gray-300 disabled:text-black" disabled={isAdded ? true : false}>{isAdded ? <i className="fa-solid fa-cart-shopping"></i> : <i className="fa-solid fa-cart-plus"></i>}</button>
+         <button onClick={() => addToCart(items)} className="h-14 w-14 rounded-full text-2xl bg-yellow-500 text-black py-3 font-bold hover:bg-yellow-300 disabled:bg-gray-300 disabled:text-black" disabled={isAdded ? true : false}>{isAdded ? <i className="fa-solid fa-cart-shopping"></i> : <i className="fa-solid fa-cart-plus"></i>}</button>
          </div>
          </div>
          {
           show &&
-          <Modal item={items} show={show} setShow={ setShow}/>
+          <Modal item={items} show={show} setShow={setShow}/>
          }
     </div>
   )

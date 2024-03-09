@@ -1,15 +1,50 @@
-import { createContext, useState } from "react";
+import { createContext, useReducer, useState } from "react";
 import LoadingBar from "react-top-loading-bar";
 
 const CartContext = createContext({});
+
+const initialState = {
+  cartProduct: []
+} 
+
+const cartReducer = (state, action) => {
+  switch(action.type) {
+    case 'ADD_PRODUCT':
+      return {
+        ...state,
+        cartProduct: [...state.cartProduct, action.payload],
+      }
+      case 'UPDATE_QUANTITY': 
+        return {
+          ...state,
+          cartProduct: state.cartProduct.map((item) => (
+            item.id === action.payload.id ? {...item, quantity: action.payload.quantity} : item
+          ))
+        };
+        case 'REMOVE_PRODUCT': 
+          return {
+            ...state,
+            cartProduct: state.cartProduct.filter(product => product.id !== action.payload)
+          }
+        case 'CLEAR':
+          return {
+              ...state,
+              cartProduct: []
+          }
+      default:
+        return state;
+  }
+}
+
 
 export const CartProvider = ({ children }) => {
     const [products, setProducts] = useState([]);
     const [progress, setProgress] = useState(0);
     const [page, setPage] = useState(0);
-    const [cartItems, setCardItems] = useState([]);
     const [category, setCategory] = useState([]);
-    const [totalPrice, setTotalPrice] = useState(0);
+    const [searchProducts, setSearchProducts] = useState([]);
+    const [search, setSearch] = useState('');
+    const [cartState, dispatch] = useReducer(cartReducer, initialState)
     const [msg, setMsg] = useState('');
     const perPage = 10;
 
@@ -39,18 +74,6 @@ export const CartProvider = ({ children }) => {
     
         }, 1200);
       }
-      
-      const handleCartItems = (items) => {
-        setCardItems([...cartItems, items]);
-        setTotalPrice(totalPrice + (items.price * 1));
-      }
-    
-      const handleRemoveItem = (items, qty) => {
-        const remove = cartItems.filter(item => item.id !== items.id);
-        setCardItems( [...remove] );
-        setTotalPrice(totalPrice - (items.price * qty));
-
-       }
 
        const getAllCategory = async() => {
         try {
@@ -63,21 +86,27 @@ export const CartProvider = ({ children }) => {
        }
 
        const isExistedCartItem = (cartItem) => {
-          return cartItems.find(item => item.id === cartItem.id);
+          return cartState.cartProduct.find(item => item.id === cartItem.id);
        }
 
        const handleBuyNow = () => {
-         setTotalPrice(0);
-         setCardItems([]);
+         dispatch({type: 'CLEAR'})
          setMsg('Thanks for shopping!!')
+       }
+ 
+       const handleSearch = (e) => {
+        e.preventDefault();
+        const searchItem = products.filter(item => item.title.toLowerCase().includes(search));
+        setSearchProducts(searchItem);
+        setSearch('');
        }
 
     return(
       <>
       
         <CartContext.Provider value={{
-          products, fetchData, fetchMoreData, handleCartItems, handleRemoveItem, progress, cartItems,
-          getAllCategory, category, isExistedCartItem, totalPrice, setTotalPrice, handleBuyNow, msg, setMsg
+          products, fetchData, fetchMoreData,  progress,
+          getAllCategory, category, isExistedCartItem, handleBuyNow, msg, setMsg, handleSearch, setSearch, search, searchProducts, cartState, dispatch
         }}>
              <LoadingBar 
               color="red"

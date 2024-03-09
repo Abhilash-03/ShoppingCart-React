@@ -4,7 +4,7 @@ import { useContext, useEffect } from "react"
 import CartContext from "../context/CartContext"
 
 const Home = () => {
-  const { fetchData, fetchMoreData, products } = useContext(CartContext);
+  const { fetchData, fetchMoreData, products, searchProducts } = useContext(CartContext);
   let totalResult = 30;
 
   useEffect(() => {
@@ -16,14 +16,27 @@ const Home = () => {
         dataLength={products.length}
         next={fetchMoreData}
         hasMore={products.length !== totalResult}
-        loader={<h4 className="text-center text-xl font-bold py-2 font-serif bg-yellow-300 text-black">Loading...</h4>}
+        loader=
+        {<h4 className="text-center text-xl font-bold py-2 font-serif bg-yellow-300 text-black">Loading...</h4>}
         >
               <main className="app h-full w-full bg-gray-800 text-white flex flex-col md:flex-row flex-wrap justify-center items-center">
-                {
+                { searchProducts.length === 0 ?
                   products.map(items => (
                     <Products key={items.id} items={items} />
                   ))
+                  :
+                  searchProducts.map(items => (
+                    <Products key={items.id} items={items} />
+                  ))
                 }
+            
+                {/* {
+                   searchProducts && (
+                    searchProducts.map(items => (
+                      <Products key={items.id} items={items} />
+                    ))
+                   )
+                } */}
             </main>
         </InfiniteScroll>
   )
