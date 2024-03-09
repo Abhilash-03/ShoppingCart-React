@@ -3,7 +3,11 @@ import CartContext from "../context/CartContext"
 
 
 const Modal = ({ item, show, setShow }) => {
-    const { handleCartItems, isExistedCartItem } = useContext(CartContext);
+  const { dispatch, isExistedCartItem } = useContext(CartContext);
+
+  const addTocart = (item) => {
+    dispatch({type: 'ADD_PRODUCT', payload: {...item, quantity: 1}})
+  }
     const isAdded = isExistedCartItem(item);
 
   return (
@@ -20,7 +24,7 @@ const Modal = ({ item, show, setShow }) => {
         <div className="closebtn absolute -top-4 -right-3 bg-gray-700 p-2 rounded-full hover:bg-slate-400 hover:text-black">
             <button onClick={() => setShow(!show)}><i className="fa-solid fa-eye-slash"></i></button>
         </div>
-        <button onClick={() => handleCartItems(item)} className="h-14 w-14 rounded-full text-2xl bg-yellow-500 text-black py-3 font-bold hover:bg-yellow-300 disabled:bg-gray-300 disabled:text-black md:absolute -bottom-5 right-2/4 left-2/4 mt-3" disabled={isAdded ? true : false}>{isAdded ? <i className="fa-solid fa-cart-shopping"></i> : <i className="fa-solid fa-cart-plus"></i>}</button>
+        <button onClick={() => addTocart(item)} className="h-14 w-14 rounded-full text-2xl bg-yellow-500 text-black py-3 font-bold hover:bg-yellow-300 disabled:bg-gray-300 disabled:text-black md:absolute -bottom-5 right-2/4 left-2/4 mt-3" disabled={isAdded ? true : false}>{isAdded ? <i className="fa-solid fa-cart-shopping"></i> : <i className="fa-solid fa-cart-plus"></i>}</button>
       </div>
     </div>
   )
