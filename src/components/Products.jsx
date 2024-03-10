@@ -6,7 +6,7 @@ const Products = ({ items }) => {
     const { title, images } = items;
     const [image, setImage] = useState(images[0]);
     const [show, setShow] = useState(false);
-    const { dispatch, isExistedCartItem } = useContext(CartContext);
+    const { dispatch, isExistedCartItem, handleImageError } = useContext(CartContext);
 
     const isAdded = isExistedCartItem(items);  
     
@@ -19,10 +19,10 @@ const Products = ({ items }) => {
       <div className="flex flex-col xl:flex-row bg-gray-800 items-center justify-center  rounded-xl p-2 ">
          <div className="image flex sm:p-1 flex-wrap justify-center p-3  transition-all">
           {  images.map((image, idx) => (
-            <img key={idx} src={image} alt='image' className="md:h-[100px] md:w-[130px] w-[60px] h-[50px] m-2 rounded-lg cursor-pointer" onClick={() => setImage(image)} />
+            <img key={idx} src={image} alt='image' className="md:h-[100px] md:w-[130px] w-[60px] h-[50px] m-2 rounded-lg cursor-pointer" onClick={() => setImage(image)}  onError={handleImageError} />
             ))}
          </div>
-            <img src={image} alt="image" className="w-full h-[220px] sm:h-[350px] sm:w-[400px] m-2 rounded-lg" />
+            <img src={image} alt="image" className="w-full h-[220px] sm:h-[350px] sm:w-[400px] m-2 rounded-lg" onError={handleImageError} />
          </div>
          <div className="product_body p-3">
            <h2 className="lg:text-3xl text-2xl md:text-xl text-white font-serif font-bold">{title.length > 25 ? title.slice(0, 25) + '....' : title}</h2>

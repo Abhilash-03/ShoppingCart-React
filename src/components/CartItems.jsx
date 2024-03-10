@@ -3,20 +3,20 @@ import CartContext from "../context/CartContext";
 
 
 const CartItems = ({ item }) => {
-  const {dispatch } = useContext(CartContext);
+  const { dispatch, handleImageError } = useContext(CartContext);
 
   const handleUpdateQuantity = (id, quantity) => {
-    dispatch({ type: 'UPDATE_QUANTITY', payload: { id, quantity } });
+    dispatch({ type: 'UPDATE_QUANTITY', payload: { id, quantity }});
   }
 
   const handleRemoveItem = (id) => {
     dispatch({ type: 'REMOVE_PRODUCT', payload: id });
   }
-  
+
   return (
     <li className="flex flex-col md:flex-row space-x-2 hover:ring-2 hover:scale-105 transition-all justify-between font-bold bg-gray-800 text-white lg:w-2/4 sm:w-3/4  m-auto p-3 rounded-xl my-3 relative">
     <div className="image">
-        <img src={item.images} alt={item.title} className="md:h-[200px] md:w-[250px] w-full h-[170px] rounded-xl hover:scale-110 transition-all" />
+        <img src={item.images} alt={item.title} className="md:h-[200px] md:w-[250px] w-full h-[170px] rounded-xl hover:scale-110 transition-all" onError={handleImageError} />
     </div>
     <div className="item_body font-serif md:text-xl text-sm md:w-2/4">
         <h1 className="title text-lg md:text-xl">{item.title}</h1>

@@ -3,7 +3,7 @@ import CartContext from "../context/CartContext"
 
 
 const Modal = ({ item, show, setShow }) => {
-  const { dispatch, isExistedCartItem } = useContext(CartContext);
+  const { dispatch, isExistedCartItem, handleImageError } = useContext(CartContext);
 
   const addTocart = (item) => {
     dispatch({type: 'ADD_PRODUCT', payload: {...item, quantity: 1}})
@@ -13,8 +13,8 @@ const Modal = ({ item, show, setShow }) => {
   return (
     <div className="lg:w-2/3 lg:m-auto mx-4 px-3 font-serif fixed lg:top-40 top-20 sm:top-20 left-0 right-0 flex items-center py-4 backdrop-blur-md text-white ring-2 ring-yellow-400 z-10 rounded-2xl">
       <div className="prod_body flex flex-col md:flex-row space-x-4 bg-gray-900 p-4 rounded-xl">
-        <div className="image flex  items-center">
-            <img src={item.images} alt={item.title} className="lg:h-[250px] lg:w-[280px] w-full h-[150px] mb-3 rounded-xl" />
+        <div className="image flex justify-center items-center">
+            <img src={item.images} alt={item.title} className="lg:h-[250px] lg:w-[280px] w-[230px] h-[150px] mb-3 rounded-xl" onError={handleImageError} />
         </div>
         <div className="content font-bold md:w-2/3 lg:w-full space-y-3">
             <h1 className="lg:text-3xl md:text-2xl text-lg font-bold">{item.title}</h1>
